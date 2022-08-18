@@ -1,3 +1,4 @@
 Hello world
 hello world 2
-this should be a conflicting line
+changes made while we were checking out branch2
+
