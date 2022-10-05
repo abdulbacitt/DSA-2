@@ -1,0 +1,2 @@
+lnew file
+a newfile
