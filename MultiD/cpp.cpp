@@ -4,12 +4,16 @@ int main()
 {
     cout<<"Hello, Georgie"<<endl;
 
-    int oneD[12];
+    int dr[]{1,-1,0,0,-1,1,-1,1};
+    int dc[]{0,0,-1,1,-1,-1,1,1};
 
-    int idx=0;
+    int i=5,j=3;
+    char arr[]{'d','u','l','r','t','b','R','L'};
 
-        for(int i=0;i<12;i++)
-        {
-            cout<< "oneD "<<i<<" : "<<"2D : "<<i/4<<" : "<<i%4<<" \t";
-        }
+    for(int k=0;k<8;++k)
+    {
+        int nd=i+dr[k];
+        int md=j+dc[k];
+        cout<< arr[k]<<" : "<<nd<<" "<<md<<endl;
+    }
 }
