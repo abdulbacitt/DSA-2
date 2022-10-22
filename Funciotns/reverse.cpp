@@ -2,15 +2,18 @@
 using namespace std;
 string rev_str( const string &str)
 {
-    
-    char rev_str[100];
-    cout<<str.size()<<endl;
-    for(int i=0;i<str.size();i++)
+    string ret=str;
+    string rev_str;
+    int st=0, en=str.size()-1;
+    while(st<en)
     {
-        rev_str[i]=str[str.size()-1-i];
+        char temp=ret[st];
+        ret[st]=ret[en];
+        ret[en]=temp;
+        st++,en--;
     }
-    cout<<" The last element of reversed array will be : "<<rev_str[str.size()]<<endl;
-    return rev_str;
+    return ret;
+    
 }
 int main()
 {
