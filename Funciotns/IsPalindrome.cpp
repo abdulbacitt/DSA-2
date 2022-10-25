@@ -4,14 +4,15 @@ void Is_Pal(int arr[],int size)
 {
     bool is_pal=true;
     
-    for(int i=0;i<size;i++)
+    int st=0,en=size-1;
+    while(st<en)
     {
-        if(arr[i]!=arr[size-1-i])
+        if(arr[st]!=arr[en])
         {
             is_pal=false;
             break;
         }
-        
+        st++,en--;
 
     }
     if(is_pal)
