@@ -14,4 +14,5 @@ int main()
     cout<<" Started \n";
     int aray[]{1,2,4,5,2};
     cout<<average(aray,5);
+    return 0;
 }
