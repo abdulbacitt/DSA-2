@@ -1,5 +1,8 @@
 #include<iostream>
 #include<algorithm>
+#include <vector>
+#include <set>
+#include<assert.h>
 
 using namespace std;
 const int max_books = 10;
@@ -19,7 +22,11 @@ struct book {
     bool add() {
         cout << " Enter the name, id, and total quantity" << endl;
 
-        cin >> name >> id >> total_qty;
+        cin >> name ;
+        cout << " Named sucessfully \n";
+        cin >> id;
+        cout << " Identification sucessfull" << endl;
+        cin >> total_qty ;
 
         return true;
     }
@@ -40,14 +47,15 @@ struct book {
 
 
 };
-bool contains_prefix(book &a, string &prefix) {
+bool contains_prefix(book &b, string &prefix) {
 
-    if((prefix).size() > (a.name).size()) {
+    if((prefix).size() > (b.name).size()) {
         return false;
     }
+    int i = 0;
 
-    for(int i = 0; i < (prefix).size(); i++){
-        if(a.name[i]!=prefix[i]) {
+    for(char c: prefix){
+        if(b.name[i++]!= c) {
             return false;
         }
     }
@@ -64,25 +72,24 @@ struct user {
     string name;
     int id;
     int books_borrowed;
-    int borrowed_books_ids[max_books];
+    set <int> borrowed_books_ids;
 
     user() {
         name = " ";
         id   = -1 ;
         books_borrowed = 0;
-        for(auto &ids: borrowed_books_ids) {
-            ids = -1;
-        }
+        
     }
     void add() {
-
+            cout << " Enter the name and the ID of the user " << endl;
             cin >> name;
             cin >> id;
     }
 
     void borrow(int &id) {
         if(books_borrowed < max_books)
-        borrowed_books_ids[books_borrowed++] = id;
+        {borrowed_books_ids.insert(id);
+        books_borrowed++;}
         else
         cout << " Registry for the maximum books is full" << endl;
     }
@@ -96,25 +103,23 @@ struct user {
     }
 
     bool has_book(int &book_id) {
-        for(auto ids: borrowed_books_ids) {
-            if(ids = book_id)
+        auto it = borrowed_books_ids.find(book_id);
+        if(it != borrowed_books_ids.end()) {
+           
             return true;
         }
+        
         return false;
     }
 
     bool return_book(int &book_id){
-        for(int i = 0; i < books_borrowed; i++){
-            if(borrowed_books_ids[i] == book_id){
-                for(int j = i; j < books_borrowed; j++) {
-                  
-                  borrowed_books_ids[j] = borrowed_books_ids[j+1];
-                
-                }
-                books_borrowed--;
-                return true;
-            }
+        auto it = borrowed_books_ids.find(book_id);
+        if(it != borrowed_books_ids.end()) {
+            borrowed_books_ids.erase(it);
+            return true;
         }
+        
+        
         return false;
     }
 
@@ -122,10 +127,10 @@ struct user {
 
 struct lib_sys {
     int total_books;
-    book books[max_books];
+     vector<book> books;
 
     int total_users;
-    user users[max_users];
+    vector<user> users;
 
     //This constructor is excuted on initialization of a variable with lib_sys
     //for example initializing all the data arrays with some data like here all the user
@@ -188,17 +193,16 @@ struct lib_sys {
     }
 
     void add_book() {
-        if(total_books < max_books) {
-            books[total_books].add();
-            total_books++;
-        }
+        book b;
+        b.add();
+        books.push_back(b);
     }
 
     void print_library_by_id() {
-        sort(books, books+total_books, comp_by_id);
+        sort(books.begin(), books.end(), comp_by_id);
 
-        for(int i = 0; i < total_books; i++) {
-            books[i].print();
+        for(book &b: books) {
+            b.print();
         }
 
     }
@@ -208,9 +212,9 @@ struct lib_sys {
         cout << " Enter the prefix " << endl;
         cin >> prefiks;
 
-        for(int i = 0; i < total_books; i++) {
-            if(contains_prefix(books[i], prefiks)) {
-                cout << books[i].name << endl;
+        for(book &b: books) {
+            if(contains_prefix(b, prefiks)) {
+                cout << b.name << endl;
                 return;
             }
             
@@ -221,10 +225,9 @@ struct lib_sys {
     }
     
     void add_user() {
-        if(total_users < max_users){
-            cout << "Enter the name of the user and ID" << endl;           
-            users[total_users++].add();
-        }
+       user u;
+       u.add();
+       users.push_back(u);
 
     }
     void user_borrow_book(){
@@ -244,20 +247,22 @@ struct lib_sys {
         cout << " Enter the registered book name" << endl;
     string name;
     cin >> name;
-    for(int i = 0; i < total_users; i++) {
+    for(int i = 0; i < books.size(); i++) {
+        cout << " acessed " << endl;
     if(books[i].name == name){
         b_idx = i;
         cout << "Book Name succesfully found" << endl;
         return true;
     }
     }
+    cout << " Book not found \n";
     return false;
     }
     bool idx_user(int &u_idx) {
         cout << " Enter the registered user name" << endl;
     string name;
     cin >> name;
-    for(int i = 0; i < total_users; i++) {
+    for(int i = 0; i < users.size(); i++) {
     if(users[i].name == name){
         u_idx = i;
         cout << " Username sucessfully found" << endl;
@@ -269,10 +274,10 @@ struct lib_sys {
     }
     
     void print_users() {
-        if(total_users > 0) {
+        {
 
-        for(auto usr: users) {
-            if(usr.name != " ") {
+        for(auto &usr: users) {
+           {
             usr.print();
             cout << endl;
             }
@@ -284,7 +289,7 @@ struct lib_sys {
         int book_idx;
         if(idx_book(book_idx)) {
             int book_id = books[book_idx].id;
-            for(int i = 0; i < total_users; i++) {
+            for(int i = 0; i < users.size(); i++) {
                 if(users[i].has_book(book_id)) {
                     cout << users[i].name << endl;
                 }
@@ -299,9 +304,9 @@ struct lib_sys {
     void user_return_book() {
         int book_idx, user_idx;
         if(idx_book(book_idx) && idx_user(user_idx)){
-            books[book_idx].total_qty++;
+            
             if(users[user_idx].return_book(books[book_idx].id))
-            cout << "Book returned sucessfully" << endl;
+            cout << "Book returned sucessfully" << endl;books[book_idx].total_qty++;
             return;
         }
          cout << " Book not returned" << endl;
